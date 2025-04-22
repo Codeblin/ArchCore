@@ -1,15 +1,55 @@
+# === Android/Java ===
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.gradle/
+build/
+captures/
+.externalNativeBuild/
 local.properties
+.idea/
+
+# Kotlin build
+*.kotlin_module
+
+# Signing / secrets
+*.jks
+*.keystore
+*.key
+*.pem
+*.der
+
+# Jetpack Compose preview
+.idea/assetWizardSettings.xml
+
+# Caches
+.cxx/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# Unit test, lint & crash logs
+*.log
+lint/reports/
+lint-results*.xml
+test-results/
+coverage/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Gradle caches
+**/build/
+.gradle/
+gradle-app.setting
+.gradle/
+
+# Android Studio settings (optional)
+.idea/
+*.ipr
+*.iws
+
+# === Optional: only include lib-specific output ===
+# You can keep your module structure clean by also ignoring `.build` inside only the `mylibrary/` folder like this:
+
+mylibrary/build/
