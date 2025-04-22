@@ -136,7 +136,7 @@ fun TodoItemView(
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete Todo",
-                tint = Color.Red
+                tint = MaterialTheme.colorScheme.error
             )
         }
     }
