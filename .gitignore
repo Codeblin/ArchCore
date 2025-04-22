@@ -49,7 +49,4 @@ gradle-app.setting
 *.ipr
 *.iws
 
-# === Optional: only include lib-specific output ===
-# You can keep your module structure clean by also ignoring `.build` inside only the `mylibrary/` folder like this:
-
-mylibrary/build/
+ArchCore/build/
