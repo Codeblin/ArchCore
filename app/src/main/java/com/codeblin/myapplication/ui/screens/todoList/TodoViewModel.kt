@@ -1,11 +1,13 @@
 package com.codeblin.myapplication.ui.screens.todoList
 
 import androidx.lifecycle.viewModelScope
+import com.codeblin.archcore.navigation.NavigationUiEvent
 import com.codeblin.archcore.viewmodel.ArchCoreViewModel
 import com.codeblin.archcore.viewmodel.UiEvent
 import com.codeblin.archcore.viewmodel.UiIntent
 import com.codeblin.archcore.viewmodel.UiState
-import com.codeblin.myapplication.data.TodoUseCase
+import com.codeblin.myapplication.data.TodoRepository
+import com.codeblin.myapplication.navigation.AppDestination
 import kotlinx.coroutines.launch
 
 data class TodoUiState(val todos: List<TodoItem> = emptyList()) : UiState
@@ -19,11 +21,14 @@ sealed class TodoUiIntent : UiIntent {
     data class AddTodo(val text: String) : TodoUiIntent()
     data class ToggleTodo(val id: Int) : TodoUiIntent()
     data class DeleteTodo(val id: Int) : TodoUiIntent()
+    sealed class Navigate : TodoUiIntent() {
+        data class ToDetails(val id: String) : Navigate()
+    }
 }
 
 
 class TodoViewModel(
-    private val todoUseCase: TodoUseCase,
+    private val repository: TodoRepository,
 ) : ArchCoreViewModel<TodoUiState, TodoUiEvent, TodoUiIntent>(TodoUiState()) {
 
     private var nextId = 1
@@ -34,12 +39,17 @@ class TodoViewModel(
             is TodoUiIntent.AddTodo -> addTodo(intent.text)
             is TodoUiIntent.ToggleTodo -> toggleTodo(intent.id)
             is TodoUiIntent.DeleteTodo -> deleteTodo(intent.id)
+            is TodoUiIntent.Navigate.ToDetails -> navigateToDetails(intent.id)
         }
+    }
+
+    private fun navigateToDetails(id: String) {
+        navigateTo(AppDestination.TodoDetails, "id" to id)
     }
 
     private fun getTodos() {
         viewModelScope.launch {
-            val todos = todoUseCase.execute()
+            val todos = repository.getData()
             updateState(uiState.value.copy(todos = todos))
         }
     }
@@ -47,7 +57,7 @@ class TodoViewModel(
     private fun addTodo(text: String) {
         viewModelScope.launch {
             val newTodo = TodoItem(id = nextId++, text = text)
-            todoUseCase.addTodo(newTodo)
+            repository.addTodo(newTodo)
             updateState(uiState.value.copy(todos = uiState.value.todos + newTodo))
             sendEvent(TodoUiEvent.ShowSnackbar("Task Added"))
         }
@@ -62,7 +72,7 @@ class TodoViewModel(
 
     private fun deleteTodo(id: Int) {
         viewModelScope.launch {
-            todoUseCase.deleteTodo(id)
+            repository.deleteTodo(id)
             updateState(uiState.value.copy(todos = uiState.value.todos.filter { it.id != id }))
             sendEvent(TodoUiEvent.ShowSnackbar("Task Deleted"))
         }

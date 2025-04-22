@@ -2,6 +2,10 @@ package com.codeblin.archcore.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codeblin.archcore.navigation.NavigationCommand
+import com.codeblin.archcore.navigation.NavigationDestination
+import com.codeblin.archcore.navigation.NavigationManager
+import com.codeblin.archcore.navigation.NavigationUiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -28,6 +32,18 @@ abstract class ArchCoreViewModel<S : UiState, E : UiEvent, I : UiIntent>(
 
     protected fun sendEvent(event: E) {
         viewModelScope.launch { _uiEvent.emit(event) }
+    }
+
+    protected fun navigateTo(destination: NavigationDestination, vararg args: Pair<String, String>) {
+        viewModelScope.launch {
+            NavigationManager.emit(NavigationCommand.To(destination, mapOf(*args)))
+        }
+    }
+
+    protected fun navigateBack() {
+        viewModelScope.launch {
+            NavigationManager.emit(NavigationCommand.Back)
+        }
     }
 }
 

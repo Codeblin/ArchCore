@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.codeblin.myapplication.navigation.NavRouter
 import com.codeblin.myapplication.ui.screens.todoList.TodoScreen
 import com.codeblin.myapplication.ui.theme.MyApplicationTheme
 
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                TodoScreen()
+                NavRouter()
             }
         }
     }

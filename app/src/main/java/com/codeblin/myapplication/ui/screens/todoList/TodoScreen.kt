@@ -1,5 +1,6 @@
 package com.codeblin.myapplication.ui.screens.todoList
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -85,7 +86,11 @@ fun Content(
                     },
                     onDelete = {
                         processIntent(TodoUiIntent.DeleteTodo(todo.id))
-                    })
+                    },
+                    onClick = {
+                        processIntent(TodoUiIntent.Navigate.ToDetails(todo.id.toString()))
+                    }
+                )
             }
         }
 
@@ -100,6 +105,7 @@ fun TodoItemView(
     todo: TodoItem,
     onToggle: () -> Unit,
     onDelete: () -> Unit,
+    onClick: (id: String) -> Unit,
 ) {
     // Row to display the todo item
     Row(
@@ -119,7 +125,8 @@ fun TodoItemView(
             text = todo.text,
             modifier = Modifier
                 .weight(1f) // Allow text to take up remaining space
-                .padding(start = 16.dp),
+                .padding(start = 16.dp)
+                .clickable { onClick(todo.id.toString()) },
             style = MaterialTheme.typography.bodyLarge,
             color = if (todo.isCompleted) Color.Gray else Color.Black
         )
@@ -143,7 +150,8 @@ fun PreviewTodoItemView() {
     TodoItemView(
         todo = todo,
         onToggle = { /* Simulate toggle action */ },
-        onDelete = { /* Simulate delete action */ }
+        onDelete = { /* Simulate delete action */ },
+        onClick = { /* Simulate click action */ }
     )
 }
 
@@ -158,7 +166,7 @@ fun PreviewTodoListScreen() {
         TodoItem(id = 3, text = "Finish homework", isCompleted = false)
     )
 
-    Content(TodoUiState(todos = sampleTodos)){}
+    Content(TodoUiState(todos = sampleTodos)) {}
 }
 
 

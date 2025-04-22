@@ -1,15 +1,25 @@
 package com.codeblin.myapplication.data
 
-import com.codeblin.myapplication.ApplicationNetworkManager
+import android.content.Context
+import com.codeblin.archcore.data.ArchCoreRepository
 import com.codeblin.myapplication.ui.screens.todoList.TodoItem
 
 class TodoRepository(
     private val remoteDataSource: TodoRemoteDataSource,
     private val localDataSource: TodoLocalDataSource,
-    private val networkManager: ApplicationNetworkManager,
-) {
+    context: Context,
+): ArchCoreRepository<List<TodoItem>>(context) {
+
+    override suspend fun getData(): List<TodoItem> {
+        return if (networkManager.isNetworkAvailable()) {
+            remoteDataSource.getAll()
+        } else {
+            localDataSource.getAll()
+        }
+    }
+
     suspend fun addTodo(item: TodoItem) {
-        if (networkManager.isConnected()) {
+        if (networkManager.isNetworkAvailable()) {
             localDataSource.save(item)
         } else {
             remoteDataSource.save(item)
@@ -17,23 +27,15 @@ class TodoRepository(
     }
 
     suspend fun deleteTodo(id: Int) {
-        if (networkManager.isConnected()) {
+        if (networkManager.isNetworkAvailable()) {
             remoteDataSource.delete(id)
         } else {
             localDataSource.delete(id)
         }
     }
 
-    suspend fun getTodos(): List<TodoItem> {
-        return if (networkManager.isConnected()) {
-            remoteDataSource.getAll()
-        } else {
-            localDataSource.getAll()
-        }
-    }
-
     suspend fun getTodo(id: Int): TodoItem {
-        return if (networkManager.isConnected()) {
+        return if (networkManager.isNetworkAvailable()) {
             remoteDataSource.getById(id) ?: throw Exception("Todo not found")
         } else {
             localDataSource.getById(id) ?: throw Exception("Todo not found")
