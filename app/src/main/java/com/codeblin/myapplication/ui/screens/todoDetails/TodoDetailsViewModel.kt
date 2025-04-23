@@ -13,6 +13,9 @@ sealed class TodoDetailsUiEvent : UiEvent {
 }
 
 sealed class TodoDetailsUiIntent : UiIntent {
+    sealed class Navigate : TodoDetailsUiIntent() {
+        data object Pop : Navigate()
+    }
 }
 
 class TodoDetailsViewModel :
@@ -22,6 +25,8 @@ class TodoDetailsViewModel :
         )
     ) {
     override fun processIntent(intent: TodoDetailsUiIntent) {
-
+        when (intent) {
+            is TodoDetailsUiIntent.Navigate.Pop -> navigateBack()
+        }
     }
 }

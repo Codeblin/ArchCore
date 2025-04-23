@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.codeblin.archcore.navigation.NavigationMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,47 +26,59 @@ fun ArchCoreScreen(
     isLoading: Boolean = false,
     errorMessage: String? = null,
     topBarTitle: String? = null,
-    onTopBarAction: (() -> Unit)? = null,  // Action for top bar button if needed
+    navigationMode: NavigationMode = NavigationMode.NONE,
+    onTopBarAction: (() -> Unit)? = null,
+    topBar: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
-    // Scaffold provides a basic layout structure
     Scaffold(
         topBar = {
-            topBarTitle?.let {
-                TopAppBar(
-                    title = { Text(text = it) },
-                    actions = {
-                        if (onTopBarAction != null) {
-                            IconButton(onClick = { onTopBarAction() }) {
-                                Icon(
-                                    Icons.AutoMirrored.Default.ArrowBack,
-                                    contentDescription = "Back"
-                                )
+            when {
+                topBar != null -> topBar()
+                topBarTitle != null -> {
+                    TopAppBar(
+                        title = { Text(text = topBarTitle) },
+                        navigationIcon = {
+                            if (navigationMode == NavigationMode.NAVIGATABLE && onTopBarAction != null) {
+                                IconButton(onClick = onTopBarAction) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Back"
+                                    )
+                                }
                             }
+                        },
+                        actions = {
+                            // You can add trailing icons or other actions here if needed
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            if (isLoading) {
-                // Show loading indicator if isLoading is true
-                CircularProgressIndicator(
-                    modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center)
-                )
-            } else if (errorMessage != null) {
-                // Show error message if an error occurs
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                // Show the content of the screen when there are no loading or error states
-                content()
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center)
+                    )
+                }
+
+                errorMessage != null -> {
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                else -> content()
             }
         }
     }
 }
+
+

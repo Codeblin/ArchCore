@@ -42,7 +42,7 @@ afterEvaluate {
 
                 groupId = "com.github.codeblin"
                 artifactId = "ArchCore"
-                version = "1.0"
+                version = "1.1"
             }
         }
     }
