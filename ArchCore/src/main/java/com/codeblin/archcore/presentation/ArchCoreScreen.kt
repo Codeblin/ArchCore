@@ -27,11 +27,13 @@ fun ArchCoreScreen(
     errorMessage: String? = null,
     topBarTitle: String? = null,
     navigationMode: NavigationMode = NavigationMode.NONE,
+    floatingActionButton: @Composable () -> Unit = {},
     onTopBarAction: (() -> Unit)? = null,
     topBar: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
+        floatingActionButton = floatingActionButton,
         topBar = {
             when {
                 topBar != null -> topBar()
