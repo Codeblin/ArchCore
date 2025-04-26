@@ -18,7 +18,7 @@ fun TodoDetailsScreen(viewModel: TodoDetailsViewModel) {
             topBarTitle = "Home",
             navigationMode = NavigationMode.NAVIGATABLE,
             onTopBarAction = { viewModel.processIntent(TodoDetailsUiIntent.Navigate.Pop) },
-            applyPadding = { paddingValues -> Modifier.padding(top = paddingValues.calculateTopPadding()) }
+            applyPaddingModifier = { paddingValues -> Modifier.padding(top = paddingValues.calculateTopPadding()) }
         ) {
             Text("all good")
         }

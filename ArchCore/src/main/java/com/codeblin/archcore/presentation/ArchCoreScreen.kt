@@ -30,7 +30,7 @@ fun ArchCoreScreen(
     navigationMode: NavigationMode = NavigationMode.NONE,
     floatingActionButton: @Composable () -> Unit = {},
     onTopBarAction: (() -> Unit)? = null,
-    applyPadding: (PaddingValues) -> Modifier = { Modifier.padding(it) },
+    applyPaddingModifier: (PaddingValues) -> Modifier = { Modifier.padding(it) },
     bottomBar: @Composable (() -> Unit)? = null,
     topBar: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
@@ -62,7 +62,7 @@ fun ArchCoreScreen(
             }
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = applyPaddingModifier(paddingValues)) {
             when {
                 isLoading -> {
                     CircularProgressIndicator(
