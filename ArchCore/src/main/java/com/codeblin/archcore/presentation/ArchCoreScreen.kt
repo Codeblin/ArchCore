@@ -29,11 +29,13 @@ fun ArchCoreScreen(
     navigationMode: NavigationMode = NavigationMode.NONE,
     floatingActionButton: @Composable () -> Unit = {},
     onTopBarAction: (() -> Unit)? = null,
+    bottomBar: @Composable (() -> Unit)? = null,
     topBar: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = floatingActionButton,
+        bottomBar = { bottomBar?.invoke() },
         topBar = {
             when {
                 topBar != null -> topBar()
@@ -51,7 +53,7 @@ fun ArchCoreScreen(
                             }
                         },
                         actions = {
-                            // You can add trailing icons or other actions here if needed
+
                         }
                     )
                 }
